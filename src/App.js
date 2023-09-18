@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Logo from './Logo';
+import PackingList from './PackingList';
+import Stats from './Stats';
+import Navbar from './Navbar';
+import { useState } from 'react';
 
-function App() {
+
+export default function App() {
+
+  const [items, setItems] = useState([]);
+
+  function HandleAddItem(newItem) {
+    setItems(items => [...items, newItem])
+
+  }
+
+  function HandleRemoveItem(id) {
+    setItems(items => items.filter(item => item.id !== id));
+  }
+
+  function handleToggleItem(id) {
+    setItems(items =>
+      items.map(item => (item.id === id ?
+        { ...item, packed: !item.packed }
+        : item)
+      ));
+  }
+
+  function HandleClearList() {
+    const confirmed = window.confirm("Are you sure you want to delete all the items?");
+    if (confirmed) setItems([]);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="d-flex flex-column min-vh-100">
+      <Logo />
+      <Navbar onAddItems={HandleAddItem} />
+      <PackingList items={items}
+        onDeleteItem={HandleRemoveItem}
+        onToggleItem={handleToggleItem}
+        onClearList={HandleClearList} />
+      <Stats Items={items} />
     </div>
   );
 }
 
-export default App;
+
+
+
+
+
+
+
+

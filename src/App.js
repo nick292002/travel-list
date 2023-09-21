@@ -3,16 +3,20 @@ import Logo from './Logo';
 import PackingList from './PackingList';
 import Stats from './Stats';
 import Navbar from './Navbar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 export default function App() {
 
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(JSON.parse(localStorage.getItem('packingList')) || []);
+
+  useEffect(() => {
+    localStorage.setItem('packingList', JSON.stringify(items))
+
+  }, [items]);
 
   function HandleAddItem(newItem) {
     setItems(items => [...items, newItem])
-
   }
 
   function HandleRemoveItem(id) {
